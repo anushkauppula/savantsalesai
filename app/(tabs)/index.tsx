@@ -2,7 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
@@ -11,6 +11,7 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [transcription, setTranscription] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<string | null>(null); // New state
 
   useEffect(() => {
     return () => {
@@ -38,7 +39,8 @@ export default function App() {
       );
 
       setRecording(recording);
-      setTranscription(null); // Clear previous transcription
+      setTranscription(null);
+      setAnalysis(null); // Clear previous analysis
     } catch (error) {
       console.error('Failed to start recording:', error);
     }
@@ -59,7 +61,6 @@ export default function App() {
 
   const playPauseRecording = async () => {
     if (!sound) {
-      // No sound loaded yet, so create and start playback
       if (!recordedURI) return;
 
       try {
@@ -81,9 +82,7 @@ export default function App() {
         setSound(newSound);
 
         newSound.setOnPlaybackStatusUpdate((status) => {
-          if (!status.isLoaded) {
-            return;
-          }
+          if (!status.isLoaded) return;
           setIsPlaying(status.isPlaying);
 
           if (status.didJustFinish) {
@@ -100,7 +99,6 @@ export default function App() {
         setIsPlaying(false);
       }
     } else {
-      // Sound is loaded; toggle pause/play
       const status = await sound.getStatusAsync();
       if (!status.isLoaded) return;
 
@@ -120,11 +118,10 @@ export default function App() {
     try {
       setIsSending(true);
       setTranscription(null);
+      setAnalysis(null);
 
       const fileInfo = await FileSystem.getInfoAsync(recordedURI);
-      if (!fileInfo.exists) {
-        throw new Error("File does not exist");
-      }
+      if (!fileInfo.exists) throw new Error("File does not exist");
 
       const formData = new FormData();
       formData.append('file', {
@@ -133,7 +130,7 @@ export default function App() {
         type: 'audio/x-m4a',
       } as any);
 
-      const backendURL = 'http://192.168.1.176:8000/transcribe';
+      const backendURL = 'http://192.168.1.159:8000/analyze_sales_call';
 
       const res = await fetch(backendURL, {
         method: 'POST',
@@ -142,17 +139,14 @@ export default function App() {
 
       if (!res.ok) {
         const errText = await res.text();
-        console.error('HTTP error response:', res.status, errText);
         throw new Error(`Server error: ${res.status} - ${errText}`);
       }
 
       const data = await res.json();
       setTranscription(data.transcription);
+      setAnalysis(data.analysis); // Set coaching summary
     } catch (error: any) {
-      console.log('---- Error Object ----');
       console.log(JSON.stringify(error, Object.getOwnPropertyNames(error)));
-      console.log('-----------------------');
-
       Alert.alert(
         'Error Sending Audio',
         error.message || 'Unknown error occurred. See logs for more info.'
@@ -163,8 +157,9 @@ export default function App() {
   };
 
   return (
+  <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.container}>
-      <Text style={styles.title}>Savant Sales Audio Recorder</Text>
+      <Text style={styles.title}>Savant Sales AI</Text>
 
       <Pressable
         style={[styles.recordButton, recording ? styles.recording : styles.notRecording]}
@@ -176,13 +171,8 @@ export default function App() {
 
       {recordedURI && (
         <View style={styles.playback}>
-          {/* Changed onPress to playPauseRecording and removed disabled on isPlaying */}
           <Pressable style={styles.playButton} onPress={playPauseRecording}>
-            <MaterialIcons
-              name={isPlaying ? 'pause' : 'play-arrow'}
-              size={30}
-              color="#fff"
-            />
+            <MaterialIcons name={isPlaying ? 'pause' : 'play-arrow'} size={30} color="#fff" />
             <Text style={styles.buttonText}>{isPlaying ? 'Playing...' : 'Play'}</Text>
           </Pressable>
 
@@ -203,14 +193,27 @@ export default function App() {
         </View>
       )}
 
-      {transcription && (
+      {/* {transcription && (
         <View style={styles.transcriptionCard}>
           <Text style={styles.transcriptionTitle}>Transcription</Text>
-          <Text style={styles.transcriptionText}>{transcription}</Text>
+          <ScrollView style={styles.scrollArea}>
+            <Text style={styles.transcriptionText}>{transcription}</Text>
+          </ScrollView>
+        </View>
+      )} */}
+
+      {analysis && (
+        <View style={styles.transcriptionCard}>
+          <Text style={styles.summaryTitle}>Summary and Tips</Text>
+          <ScrollView style={styles.scrollArea}>
+            <Text style={styles.transcriptionText}>{analysis}</Text>
+          </ScrollView>
         </View>
       )}
     </View>
-  );
+  </ScrollView>
+);
+
 }
 
 const styles = StyleSheet.create({
@@ -295,10 +298,25 @@ const styles = StyleSheet.create({
     color: '#3b4cca',
     textAlign: 'center',
   },
+  summaryTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 12,
+    color: '#009688',
+    textAlign: 'center',
+  },
   transcriptionText: {
     fontSize: 16,
     color: '#333',
     lineHeight: 24,
     textAlign: 'left',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 30,
+  },
+
+  scrollArea: {
+    maxHeight: 200,
   },
 });
