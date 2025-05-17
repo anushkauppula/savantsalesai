@@ -17,7 +17,9 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "permissions": ["AUDIO_RECORDING"]
+      "permissions": [
+        "AUDIO_RECORDING"
+      ]
     },
     "web": {
       "bundler": "metro",
