@@ -3,7 +3,7 @@ import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-
+ 
 export default function App() {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
   const [recordedURI, setRecordedURI] = useState<string | null>(null);
@@ -12,7 +12,7 @@ export default function App() {
   const [isSending, setIsSending] = useState(false);
   const [transcription, setTranscription] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<string | null>(null); // New state
-
+ 
   useEffect(() => {
     return () => {
       if (sound) {
@@ -20,7 +20,7 @@ export default function App() {
       }
     };
   }, [sound]);
-
+ 
   const startRecording = async () => {
     try {
       const permission = await Audio.requestPermissionsAsync();
@@ -28,16 +28,16 @@ export default function App() {
         Alert.alert('Permission to access microphone is required!');
         return;
       }
-
+ 
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
       });
-
+ 
       const { recording } = await Audio.Recording.createAsync(
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
-
+ 
       setRecording(recording);
       setTranscription(null);
       setAnalysis(null); // Clear previous analysis
@@ -45,11 +45,11 @@ export default function App() {
       console.error('Failed to start recording:', error);
     }
   };
-
+ 
   const stopRecording = async () => {
     try {
       if (!recording) return;
-
+ 
       await recording.stopAndUnloadAsync();
       const uri = recording.getURI();
       setRecordedURI(uri ?? null);
@@ -58,11 +58,11 @@ export default function App() {
       console.error('Failed to stop recording:', error);
     }
   };
-
+ 
   const playPauseRecording = async () => {
     if (!sound) {
       if (!recordedURI) return;
-
+ 
       try {
         await Audio.setAudioModeAsync({
           allowsRecordingIOS: false,
@@ -73,25 +73,25 @@ export default function App() {
           interruptionModeAndroid: 1,
           interruptionModeIOS: 1,
         });
-
+ 
         const { sound: newSound } = await Audio.Sound.createAsync(
           { uri: recordedURI },
           { shouldPlay: false }
         );
-
+ 
         setSound(newSound);
-
+ 
         newSound.setOnPlaybackStatusUpdate((status) => {
           if (!status.isLoaded) return;
           setIsPlaying(status.isPlaying);
-
+ 
           if (status.didJustFinish) {
             newSound.unloadAsync();
             setSound(null);
             setIsPlaying(false);
           }
         });
-
+ 
         await newSound.playAsync();
         setIsPlaying(true);
       } catch (error) {
@@ -101,7 +101,7 @@ export default function App() {
     } else {
       const status = await sound.getStatusAsync();
       if (!status.isLoaded) return;
-
+ 
       if (status.isPlaying) {
         await sound.pauseAsync();
         setIsPlaying(false);
@@ -111,37 +111,37 @@ export default function App() {
       }
     }
   };
-
+ 
   const sendAudioForTranscription = async () => {
     if (!recordedURI) return;
-
+ 
     try {
       setIsSending(true);
       setTranscription(null);
       setAnalysis(null);
-
+ 
       const fileInfo = await FileSystem.getInfoAsync(recordedURI);
       if (!fileInfo.exists) throw new Error("File does not exist");
-
+ 
       const formData = new FormData();
       formData.append('file', {
         uri: recordedURI,
         name: 'recording.m4a',
         type: 'audio/x-m4a',
       } as any);
-
-      const backendURL = 'http://192.168.1.159:8000/analyze_sales_call';
-
+ 
+      const backendURL = 'http://10.10.117.3:8000/analyze_sales_call';
+ 
       const res = await fetch(backendURL, {
         method: 'POST',
         body: formData,
       });
-
+ 
       if (!res.ok) {
         const errText = await res.text();
         throw new Error(`Server error: ${res.status} - ${errText}`);
       }
-
+ 
       const data = await res.json();
       setTranscription(data.transcription);
       setAnalysis(data.analysis); // Set coaching summary
@@ -155,12 +155,12 @@ export default function App() {
       setIsSending(false);
     }
   };
-
+ 
   return (
   <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.container}>
       <Text style={styles.title}>Savant Sales AI</Text>
-
+ 
       <Pressable
         style={[styles.recordButton, recording ? styles.recording : styles.notRecording]}
         onPress={recording ? stopRecording : startRecording}
@@ -168,14 +168,14 @@ export default function App() {
         <MaterialIcons name={recording ? 'stop' : 'fiber-manual-record'} size={28} color="#fff" />
         <Text style={styles.buttonText}>{recording ? 'Stop' : 'Record'}</Text>
       </Pressable>
-
+ 
       {recordedURI && (
         <View style={styles.playback}>
           <Pressable style={styles.playButton} onPress={playPauseRecording}>
             <MaterialIcons name={isPlaying ? 'pause' : 'play-arrow'} size={30} color="#fff" />
             <Text style={styles.buttonText}>{isPlaying ? 'Playing...' : 'Play'}</Text>
           </Pressable>
-
+ 
           <Pressable
             style={[styles.sendButton, isSending ? styles.sending : null]}
             onPress={sendAudioForTranscription}
@@ -192,7 +192,7 @@ export default function App() {
           </Pressable>
         </View>
       )}
-
+ 
       {/* {transcription && (
         <View style={styles.transcriptionCard}>
           <Text style={styles.transcriptionTitle}>Transcription</Text>
@@ -201,7 +201,7 @@ export default function App() {
           </ScrollView>
         </View>
       )} */}
-
+ 
       {analysis && (
         <View style={styles.transcriptionCard}>
           <Text style={styles.summaryTitle}>Summary and Tips</Text>
@@ -213,9 +213,9 @@ export default function App() {
     </View>
   </ScrollView>
 );
-
+ 
 }
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 30,
   },
-
+ 
   scrollArea: {
     maxHeight: 200,
   },
