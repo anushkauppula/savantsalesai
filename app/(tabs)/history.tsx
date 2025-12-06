@@ -12,12 +12,12 @@ export default function HistoryScreen() {
       {/* Fixed Header */}
       <View style={styles.fixedHeader}>
         <View style={styles.headerContent}>
+          <View style={styles.headerIcon}>
+            <MaterialIcons name="history" size={32} color="#fff" />
+          </View>
           <View style={styles.headerTextContainer}>
             <Text style={styles.headerTitle}>Recording History</Text>
             <Text style={styles.headerSubtitle}>{recordings.length} recordings saved</Text>
-          </View>
-          <View style={styles.headerIcon}>
-            <MaterialIcons name="history" size={32} color="#fff" />
           </View>
         </View>
       </View>
@@ -31,11 +31,11 @@ export default function HistoryScreen() {
         {recordings.length === 0 ? (
           <View style={styles.emptyState}>
             <View style={styles.emptyIconContainer}>
-              <MaterialIcons name="mic-off" size={64} color="#4a7eb7" />
+              <MaterialIcons name="mic-off" size={64} color="#006848" />
             </View>
             <Text style={styles.emptyTitle}>No Recordings Yet</Text>
             <Text style={styles.emptyDescription}>
-              Start recording your sales calls to see them appear here. Your recordings will be saved automatically.
+              Start recording your academic calls to see them appear here. Your recordings will be saved automatically.
             </Text>
           </View>
         ) : (
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   // Fixed Header Styles
   fixedHeader: {
-    backgroundColor: '#4a7eb7',
+    backgroundColor: '#006848',
     paddingTop: 60,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   headerTextContainer: {
     flex: 1,
@@ -87,11 +87,11 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 14,
-    color: '#E3F2FD',
+    color: '#E8F5F0',
     lineHeight: 18,
   },
   headerIcon: {
-    marginLeft: 16,
+    marginRight: 16,
   },
   // Scrollable Body Styles
   scrollableBody: {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#E3F2FD',
+    backgroundColor: '#E8F5F0',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,

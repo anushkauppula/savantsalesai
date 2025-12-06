@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string) => Promise<{ data: any; error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
@@ -39,11 +39,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    return { error };
+    try {
+      const trimmedEmail = email.trim().toLowerCase();
+      
+      const { data, error } = await supabase.auth.signUp({
+        email: trimmedEmail,
+        password: password,
+      });
+      
+      return { data, error };
+    } catch (error) {
+      return { data: null, error: error as any };
+    }
   };
 
   const signIn = async (email: string, password: string) => {
@@ -55,7 +62,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Sign out error:', error);
+        throw error;
+      }
+      // Clear local state
+      setSession(null);
+      setUser(null);
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Clear local state even if signOut fails
+      setSession(null);
+      setUser(null);
+      throw error;
+    }
   };
 
   const value = {

@@ -145,11 +145,11 @@ export function RecordingItem({ recording, index = 0 }: RecordingItemProps) {
             <IconSymbol
               name={isPlaying ? 'pause.fill' : 'play.fill'}
               size={24}
-              color="#4a7eb7"
+              color="#006848"
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setIsEditing(true)} style={styles.button}>
-            <IconSymbol name="pencil" size={24} color="#4a7eb7" />
+            <IconSymbol name="pencil" size={24} color="#006848" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleDelete} style={styles.button}>
             <IconSymbol name="trash.fill" size={24} color="#f44336" />
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f44336',
   },
   saveButton: {
-    backgroundColor: '#4a7eb7',
+    backgroundColor: '#006848',
   },
   buttonText: {
     color: '#fff',

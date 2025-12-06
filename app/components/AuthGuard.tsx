@@ -21,7 +21,7 @@ export default function AuthGuard() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4a7eb7" />
+        <ActivityIndicator size="large" color="#006848" />
       </View>
     );
   }

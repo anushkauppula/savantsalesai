@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { AuthProvider } from './context/AuthContext';
@@ -18,12 +19,16 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    // Configure audio mode for playback
-    Audio.setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      staysActiveInBackground: true,
-      shouldDuckAndroid: true,
-    });
+    // Configure audio mode for playback (skip on web)
+    if (Platform.OS !== 'web') {
+      Audio.setAudioModeAsync({
+        playsInSilentModeIOS: true,
+        staysActiveInBackground: true,
+        shouldDuckAndroid: true,
+      }).catch((error) => {
+        console.log('Audio mode configuration error:', error);
+      });
+    }
   }, []);
 
   if (!loaded) {

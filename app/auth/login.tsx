@@ -57,12 +57,13 @@ export default function LoginScreen() {
         <View style={styles.content}>
           <View style={styles.logoContainer}>
             <Image 
-              source={require('../../logo.png')} 
+              source={require('../../northlogo.png')} 
               style={styles.logo}
               resizeMode="contain"
               onError={(error) => console.log('Image load error:', error)}
               onLoad={() => console.log('Image loaded successfully')}
             />
+            <Text style={styles.logoText}>AI-Powered Instructor Assistant</Text>
           </View>
 
           <View style={styles.form}>
@@ -122,7 +123,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#4a7eb7',
+    backgroundColor: '#006848',
   },
   keyboardView: {
     flex: 1,
@@ -141,10 +142,12 @@ const styles = StyleSheet.create({
     height: 200,
   },
   logoText: {
-    color: '#fff',
-    fontSize: 18,
+    color: '#E8F5F0',
+    fontSize: 23,
     fontWeight: 'bold',
     marginTop: 10,
+    textAlign: 'center',
+    letterSpacing: 0.5,
   },
   title: {
     fontSize: 32,
@@ -155,7 +158,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: '#E3F2FD',
+    color: '#E8F5F0',
     textAlign: 'center',
     marginBottom: 40,
   },
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   loginButton: {
-    backgroundColor: '#4a7eb7',
+    backgroundColor: '#006848',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -203,7 +206,7 @@ const styles = StyleSheet.create({
   },
   signupText: {
     fontSize: 16,
-    color: '#E3F2FD',
+    color: '#E8F5F0',
   },
   signupLink: {
     fontSize: 16,
