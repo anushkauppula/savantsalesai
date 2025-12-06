@@ -223,7 +223,7 @@ export default function SignupScreen() {
               onError={(error) => console.log('Image load error:', error)}
               onLoad={() => console.log('Image loaded successfully')}
             />
-            <Text style={styles.logoText}>AI Assistant for Major Exploration</Text>
+            <Text style={styles.logoText}>AI-Powered Instructor Assistant</Text>
           </View>
 
           <View style={styles.form}>

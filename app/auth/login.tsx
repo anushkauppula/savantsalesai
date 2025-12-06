@@ -1,17 +1,17 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 
@@ -63,7 +63,7 @@ export default function LoginScreen() {
               onError={(error) => console.log('Image load error:', error)}
               onLoad={() => console.log('Image loaded successfully')}
             />
-            <Text style={styles.logoText}>AI Assistant for Major Exploration</Text>
+            <Text style={styles.logoText}>AI-Powered Instructor Assistant</Text>
           </View>
 
           <View style={styles.form}>
