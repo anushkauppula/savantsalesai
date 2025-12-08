@@ -56,12 +56,12 @@ export default function ProfileScreen() {
     }
     
     try {
-      const backendUrl = 'http://192.168.1.146';
+      const backendUrl = 'https://instructorai-backend.onrender.com';
       
       const endpoints = [
-        `${backendUrl}:8000/user_details/${user.id}`,
+        `${backendUrl}/user_details/${user.id}`,
         // Only use localhost on web, not on mobile
-        ...(Platform.OS === 'web' ? [`http://localhost:8000/user_details/${user.id}`] : [])
+        ...(Platform.OS === 'web' ? [`https://instructorai-backend.onrender.com/user_details/${user.id}`] : [])
       ];
       
       console.log('Fetching user details from backend:', { userId: user.id, endpoints, forDisplay });
@@ -181,12 +181,12 @@ export default function ProfileScreen() {
 
     setIsSavingProfile(true);
     try {
-      const backendUrl = 'http://192.168.1.146';
+      const backendUrl = 'https://instructorai-backend.onrender.com';
       
       const endpoints = [
-        `${backendUrl}:8000/user_details/update`,
+        `${backendUrl}/user_details/update`,
         // Only use localhost on web, not on mobile
-        ...(Platform.OS === 'web' ? [`http://localhost:8000/user_details/update`] : [])
+        ...(Platform.OS === 'web' ? [`https://instructorai-backend.onrender.com/user_details/update`] : [])
       ];
       
       const payload = {

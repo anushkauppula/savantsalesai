@@ -27,12 +27,12 @@ export default function SignupScreen() {
   const { signUp } = useAuth();
 
   const saveUserDetailsToBackend = async (userId: string, firstName: string, lastName: string, phoneNumber: string, email: string) => {
-    const backendUrl = 'http://192.168.1.146';
+    const backendUrl = 'https://instructorai-backend.onrender.com';
     
     const endpoints = [
-      `${backendUrl}:8000/user_details`,
+      `${backendUrl}/user_details`,
       // Only use localhost on web, not on mobile
-      ...(Platform.OS === 'web' ? [`http://localhost:8000/user_details`] : [])
+      ...(Platform.OS === 'web' ? [`https://instructorai-backend.onrender.com/user_details`] : [])
     ];
     
     const payload = {

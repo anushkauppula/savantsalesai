@@ -108,14 +108,14 @@ export default function RealtimeAnalysisScreen() {
     }
 
     const backendUrl = Platform.OS === 'web' 
-      ? 'http://localhost:8000' 
+      ? 'https://instructorai-backend.onrender.com' 
       : 'http://192.168.1.146:8000';
     
     // Note: /test_pinecone is a POST endpoint, not WebSocket
     // For WebSocket, we should use /ws/realtime or similar
     // For now, we'll keep WebSocket connection but use it for voice communication
     const wsBackendUrl = Platform.OS === 'web' 
-      ? 'ws://localhost:8000' 
+      ? 'ws://instructorai-backend.onrender.com/' 
       : 'ws://192.168.1.146:8000';
     
     const wsUrl = `${wsBackendUrl}/ws/realtime?user_id=${user.id}`;

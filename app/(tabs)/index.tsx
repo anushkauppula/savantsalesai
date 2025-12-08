@@ -362,12 +362,12 @@ export default function App() {
         } as any);
       }
       
-      const backendUrl = 'http://192.168.1.146';
+      const backendUrl = 'https://instructorai-backend.onrender.com';
       
       console.log('Sending request to analyze recording...');
       console.log('User ID being sent:', user?.id);
       console.log('Audio file URI:', uri);
-      console.log('Target URL:', `${backendUrl}:8000/analyze_sales_call`);
+      console.log('Target URL:', `${backendUrl}/analyze_sales_call`);
       
       const controller = new AbortController();
       timeoutId = setTimeout(() => {
@@ -381,10 +381,10 @@ export default function App() {
       console.log('- user_id:', user?.id);
       
       const endpoints = [
-        `${backendUrl}:8000/analyze_sales_call?user_id=${user?.id}`,
+        `${backendUrl}/analyze_sales_call?user_id=${user?.id}`,
         // Only use localhost on web, not on mobile
         ...(Platform.OS === 'web' ? [
-          `http://localhost:8000/analyze_sales_call?user_id=${user?.id}`,
+          `https://instructorai-backend.onrender.com/analyze_sales_call?user_id=${user?.id}`,
           `http://127.0.0.1:8000/analyze_sales_call?user_id=${user?.id}`
         ] : [])
       ];
