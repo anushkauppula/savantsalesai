@@ -111,7 +111,7 @@ export default function RealtimeAnalysisScreen() {
       ? 'https://instructorai-backend.onrender.com' 
       : 'http://192.168.1.146:8000';
     
-    // Note: /test_pinecone is a POST endpoint, not WebSocket
+    // Note: /ws/realtime is a POST endpoint, not WebSocket
     // For WebSocket, we should use /ws/realtime or similar
     // For now, we'll keep WebSocket connection but use it for voice communication
     const wsBackendUrl = Platform.OS === 'web' 
@@ -353,7 +353,7 @@ export default function RealtimeAnalysisScreen() {
         setMessages((prev) => {
           const errorMessage: Message = {
             id: generateMessageId(),
-            text: `Connection error: Unable to connect to test_pinecone endpoint. Please check if the server is running.`,
+            text: `Connection error: Unable to connect to realtime endpoint. Please check if the server is running.`,
             isUser: false,
             timestamp: new Date(),
           };
@@ -390,7 +390,7 @@ export default function RealtimeAnalysisScreen() {
       setMessages((prev) => {
         const msg: Message = {
           id: generateMessageId(),
-          text: `Failed to connect: ${errorMessage}. Please check if the server is running at ${backendUrl}/test_pinecone`,
+          text: `Failed to connect: ${errorMessage}. Please check if the server is running at ${backendUrl}/realtime`,
           isUser: false,
           timestamp: new Date(),
         };
