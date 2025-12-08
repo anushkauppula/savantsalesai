@@ -115,7 +115,7 @@ export default function RealtimeAnalysisScreen() {
     // For WebSocket, we should use /ws/realtime or similar
     // For now, we'll keep WebSocket connection but use it for voice communication
     const wsBackendUrl = Platform.OS === 'web' 
-      ? 'ws://instructorai-backend.onrender.com/' 
+      ? 'wss://instructorai-backend.onrender.com/' 
       : 'ws://192.168.1.146:8000';
     
     const wsUrl = `${wsBackendUrl}/ws/realtime?user_id=${user.id}`;
